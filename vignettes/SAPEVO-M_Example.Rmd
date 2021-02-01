@@ -1,0 +1,164 @@
+---
+title: "SAPEVO-M Example"
+author: "Raquel Dourado Coutinho, Marcos dos Santos"
+date: '`r Sys.Date()`'
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{SAPEVO-M Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+##### Multicriteria Decision Analysis (MCDA) and SAPEVO-M method.
+
+MCDA aims to help with the decision process when there is more than one criterion. Multicriteria methods can be useful in individual or group decisions in business or other fields.
+
+SAPEVO-M is a group ordinal method that uses decision-makers' preferences among criteria and alternatives. The ordinal preferences are transformed into cardinal using a scale to define the intensity from -3 to 3. SAPEVO-M is an acronym for Simple Aggregation of Preferences Expressed by Ordinal Vectors Group Decision Making. 
+
+## Example
+
+This vignette uses, as an example, a case of internet service provider evaluation. The goal is to select among A, B, and C companies based on cost, rating, and speed.
+
+Below we have the decision matrix (alternatives x criteria).
+
+| Alternatives | Cost | Rating  | Speed |
+|:------------:|-----:|--------:|------:|
+|       A1     |   100|   7.81  |   120 |
+|       A2     |   150|   8.96  |   200 |
+|       A3     |   130|   5.78  |   300 |
+
+
+We start getting the criteria pairwise comparison from the decision-makers, two in this example.
+
+#### Criteria pairwise comparison
+
+decision-maker 1
+
+|           | Cost | Rating | Speed |
+|:---------:|-----:|-------:|------:|
+|  Cost     |     0|    2   |    1  |
+|  Rating   |    -2|    0   |   -2  |
+|  Speed    |    -1|    2   |    0  |
+
+decision-maker 2
+
+|           | Cost | Rating | Speed |
+|:---------:|-----:|-------:|------:|
+|  Cost     |     0|    3   |   -2  |
+|  Rating   |    -3|    0   |   -3  |
+|  Speed    |     2|    3   |    0  |
+
+Considering the decision-maker 2 example, this comparison matrix can be read like this: "Cost is absolutely more important than Rating, Speed is much more important than Cost, Speed is absolutely more important than Rating."
+
+
+After this, we get the alternative pairwise comparison - for each criterion - from the two decision-makers.
+
+#### Alternative pairwise comparison
+
+_Cost Criterion_
+
+decision-maker 1
+
+|     | A1 | A2 | A3 |
+|:---:|---:|---:|---:|
+|  A1 |   0|  2 |  1 |
+|  A2 |  -2|  0 | -2 |
+|  A3 |  -1|  2 |  0 |
+
+decision-maker 2
+
+|     | A1 | A2 | A3 |
+|:---:|---:|---:|---:|
+|  A1 |   0|  3 |  2 |
+|  A2 |  -3|  0 | -2 |
+|  A3 |  -2|  2 |  0 |
+
+_Rating Criterion_
+
+decision-maker 1
+
+|     | A1 | A2 | A3 |
+|:---:|---:|---:|---:|
+|  A1 |   0|  0 |  1 |
+|  A2 |   0|  0 |  2 |
+|  A3 |  -1| -2 |  0 |
+
+decision-maker 2
+
+|     | A1 | A2 | A3 |
+|:---:|---:|---:|---:|
+|  A1 |   0| -1 |  2 |
+|  A2 |   1|  0 |  3 |
+|  A3 |  -2| -3 |  0 |
+
+_Speed Criterion_
+
+decision-maker 1
+
+|     | A1 | A2 | A3 |
+|:---:|---:|---:|---:|
+|  A1 |   0| -1 | -1 |
+|  A2 |   1|  0 | -1 |
+|  A3 |   1|  1 |  0 |
+
+decision-maker 2
+
+|     | A1 | A2 | A3 |
+|:---:|---:|---:|---:|
+|  A1 |   0| -2 | -3 |
+|  A2 |   2|  0 | -3 |
+|  A3 |   3|  3 |  0 |
+
+
+
+
+```{r setup}
+library(sapevom)
+
+criteria<- c("Cost", "Rating", "Speed")
+alternatives<- c("A1", "A2", "A3")
+
+listofmatrices<-list(matrix(c(0,2,1,-2,0,-2,-1,2,0),
+                                byrow=TRUE, ncol=3, dimnames=list(criteria)),
+                     matrix(c(0,3,-2,-3,0,-3,2,3,0),
+                                byrow=TRUE, ncol=3, dimnames=list(criteria))
+                     )
+
+listoflistsofmatrices<-list(list(matrix(c(0,2,1,-2,0,-2,-1,2,0),
+                                             byrow=TRUE, ncol=3, dimnames=list(alternatives)),
+                                 matrix(c(0,3,2,-3,0,-2,-2,2,0),
+                                             byrow=TRUE, ncol=3, dimnames=list(alternatives))),
+                            list(matrix(c(0,0,1,0,0,2,-1,-2,0),
+                                             byrow=TRUE, ncol=3, dimnames=list(alternatives)),
+                                 matrix(c(0,-1,2,1,0,3,-2,-3,0),
+                                             byrow=TRUE, ncol=3, dimnames=list(alternatives))),
+                            list(matrix(c(0,-1,-1,1,0,-1,1,1,0),
+                                             byrow=TRUE, ncol=3, dimnames=list(alternatives)),
+                                 matrix(c(0,-2,-3,2,0,-3,3,3,0),
+                                             byrow=TRUE, ncol=3, dimnames=list(alternatives)))
+                            )
+
+sapevom(criteriaEvaluations= listofmatrices, alternativesEvaluations= listoflistsofmatrices)
+
+
+
+```
+
+As a result, we have a list with criteria weights and alternative ordering.
+
+
+#### Reference
+
+GOMES, C. F. S., DOS SANTOS, M., TEIXEIRA, L. F. H. S. B.,  SANSEVERINO, A. M. and BARCELOS, M.R. S. (2020). SAPEVO-M: a group multicriteria ordinal ranking method. Pesquisa Operacional. 40. 1-20. DOI: 10.1590/0101-7438.2020.040.00226524.
+

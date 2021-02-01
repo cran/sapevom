@@ -1,4 +1,9 @@
-a26f78aa9e38ed1ef9e3f887f0fbccbf *DESCRIPTION
+201f751a80de31db2dcb10ce1f74b49b *DESCRIPTION
 1a3d4563a2299a8c0023264a8afc0c07 *NAMESPACE
 976843d748d59449d3c48e30156b33ba *R/sapevom.R
+35ffb69274f1a23ff6026cc186d52bc9 *build/vignette.rds
+462bf4700a2edbe1f92a3cf2d269ce47 *inst/doc/SAPEVO-M_Example.R
+61e204f629d6c780f886e2ba44c5ee26 *inst/doc/SAPEVO-M_Example.Rmd
+49045895e77e4a5d58227e5eba2199ce *inst/doc/SAPEVO-M_Example.html
 bdbbce75ccbbc224de4324863e2f5ccc *man/sapevom.Rd
+61e204f629d6c780f886e2ba44c5ee26 *vignettes/SAPEVO-M_Example.Rmd
